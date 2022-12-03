@@ -1,0 +1,9 @@
+/**
+ * 
+ */
+/**
+ * @author met
+ *
+ */
+module seatArrangement {
+}
