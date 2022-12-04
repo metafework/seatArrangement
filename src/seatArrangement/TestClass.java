@@ -1,5 +1,6 @@
 package seatArrangement;
 
+import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -7,10 +8,13 @@ import java.util.Scanner;
 public class TestClass {
 	static Theatre firstTheatre=new Theatre(5,5);
 	static Scanner scanner=new Scanner(System.in);
+	static boolean isDone=false;
+	static Exception IllegalInputException=new Exception();
 	public static int[] promptForSeat(Scanner scanner) {
 		
 		int row=0;
 		int column=0;
+		System.out.println("Which seat do you want to Reserve?");
 		System.out.println("Row:");
 		//scanner.nextLine();
 		try{
@@ -42,12 +46,29 @@ public class TestClass {
 		return output;
 		
 	}
-	public static void namePrompt() {
+	public static void terminatorCond(boolean done) throws IOException {
+		System.out.println("Enter 1 to exit or 0 to reserve another seat. ");
+		try {
+			//int inputSelection= scanner.nextInt();
+			if(scanner.nextInt()==0) {
+				done=true;
+			}else if(scanner.nextInt()==1) {
+				done=false;
+				scanner.close();
+				System.exit(0);}
+			if(scanner.nextInt()!=0&&scanner.nextInt()!=1) {throw new Exception();}
+		}catch(Exception e){
+			System.out.println("Unexpected input. Try again");
+			terminatorCond(isDone);
+		}
+		
+	}
+	/*public static void namePrompt() {
 		Scanner scanner=new Scanner(System.in);
 		
 		
 		scanner.close();
-	}
+	}*/
 	public static void reserver(int [] seat) {
 		int seatRow=seat[0]-1;
 		int seatColumn=seat[1]-1;
@@ -113,11 +134,16 @@ public class TestClass {
 			//System.out.println("_________________");
 		}	*/
 		//boolean alwaysTrue=true;
-		while(true) {
+		while(!isDone) {
 			view(firstTheatre);
-			System.out.println("Which seat do you want to Reserve?");
+			
 			
 			reserver(promptForSeat(scanner));
+			try {
+			view(firstTheatre);
+			terminatorCond(isDone);
+			}catch(Exception e) { 
+				System.out.println("Illegal input");}
 			
 		}
 		//scanner.close();
